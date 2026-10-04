@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Waveform, Layers, Disc, Activity, Sparkles, Volume2 } from 'lucide-react';
+import { AudioWaveform, Layers, Disc, Activity, Sparkles, Volume2 } from 'lucide-react';
 import PlotlyChart from '../components/PlotlyChart';
 import AudioPlayer from '../components/AudioPlayer';
 import EmotionBadge from '../components/EmotionBadge';
