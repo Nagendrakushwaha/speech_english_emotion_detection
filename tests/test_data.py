@@ -2,8 +2,8 @@ import pytest
 from pathlib import Path
 import pandas as pd
 
-from backend.app.services.dataset_service import dataset_service
-from backend.app.utils.constants import EMOTION_CODE_MAP, EMOTIONS
+from app.services.dataset_service import dataset_service
+from app.utils.constants import EMOTION_CODE_MAP, EMOTIONS
 
 def test_emotion_code_mapping():
     """Verify CREMA-D emotion code mapping contains all 6 core categories."""
@@ -25,7 +25,6 @@ def test_metadata_dataframe_integrity():
     for col in required_cols:
         assert col in df.columns, f"Missing required column: {col}"
     
-    # Check that emotion labels match known categories
     unique_emotions = set(df["emotion"].unique())
     for emo in unique_emotions:
         assert emo in EMOTIONS or emo == "unknown"

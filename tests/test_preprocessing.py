@@ -3,15 +3,14 @@ import numpy as np
 import torch
 from pathlib import Path
 
-from backend.app.preprocessing.audio_pipeline import load_audio, generate_mel_spectrogram, extract_waveform_samples
-from backend.app.preprocessing.feature_extractor import extract_single_audio_features
+from app.preprocessing.audio_pipeline import load_audio, generate_mel_spectrogram, extract_waveform_samples
+from app.preprocessing.feature_extractor import extract_single_audio_features
 
 def test_audio_pipeline_synthetic_signal():
     """Verify loading, resampling to 16kHz mono, and spectrogram generation on synthetic audio."""
     sr = 16000
     duration = 2.5
     t = np.linspace(0, duration, int(sr * duration), endpoint=False)
-    # 440 Hz pure sine wave
     y = (0.5 * np.sin(2 * np.pi * 440 * t)).astype(np.float32)
 
     mel = generate_mel_spectrogram(y, sr, n_mels=64)

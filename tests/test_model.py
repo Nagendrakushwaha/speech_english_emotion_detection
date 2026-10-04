@@ -2,15 +2,14 @@ import pytest
 import torch
 import numpy as np
 
-from backend.app.models.cnn_emotion_model import EmotionCNN
-from backend.app.utils.constants import EMOTIONS
+from app.models.cnn_emotion_model import EmotionCNN
+from app.utils.constants import EMOTIONS
 
 def test_cnn_model_architecture():
     """Verify EmotionCNN model instantiation, parameter count, and output shapes."""
     model = EmotionCNN(num_classes=len(EMOTIONS))
     model.eval()
 
-    # Input batch of 2 samples with shape (B, C, H, W) = (2, 1, 64, 94)
     dummy_input = torch.randn(2, 1, 64, 94)
     with torch.no_grad():
         logits = model(dummy_input)
@@ -19,7 +18,6 @@ def test_cnn_model_architecture():
     assert logits.shape == (2, 6), f"Expected logits shape (2, 6), got {logits.shape}"
     assert probs.shape == (2, 6), f"Expected probs shape (2, 6), got {probs.shape}"
     
-    # Verify probabilities sum to 1.0
     prob_sums = probs.sum(dim=1).numpy()
     np.testing.assert_allclose(prob_sums, [1.0, 1.0], atol=1e-5)
 
