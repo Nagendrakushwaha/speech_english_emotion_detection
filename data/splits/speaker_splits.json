@@ -100,8 +100,8 @@
   "train_actor_count": 63,
   "val_actor_count": 14,
   "test_actor_count": 14,
-  "train_samples": 10316,
-  "val_samples": 2284,
-  "test_samples": 2284,
+  "train_samples": 5158,
+  "val_samples": 1142,
+  "test_samples": 1142,
   "zero_speaker_leakage_verified": true
 }
