@@ -52,8 +52,14 @@ class DatasetService:
         valid_count = 0
         total_files = 0
 
-        # Scan for all wav files
-        wav_files = sorted(list(target_dir.glob("*.wav")) + list(target_dir.glob("*.WAV")))
+        # Scan for all unique wav files
+        seen_paths = set()
+        wav_files = []
+        for p in sorted(target_dir.glob("*.wav")):
+            resolved = p.resolve()
+            if resolved not in seen_paths:
+                seen_paths.add(resolved)
+                wav_files.append(p)
         total_files = len(wav_files)
 
         for p in wav_files:
