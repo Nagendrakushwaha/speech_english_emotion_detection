@@ -103,5 +103,6 @@
   "train_samples": 5158,
   "val_samples": 1142,
   "test_samples": 1142,
+  "speaker_leakage": 0,
   "zero_speaker_leakage_verified": true
 }

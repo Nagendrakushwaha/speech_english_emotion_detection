@@ -243,9 +243,9 @@ class DatasetService:
         n_val = max(1, int(round(n_total * val_ratio)))
         n_train = n_total - n_test - n_val
         
-        test_actors = sorted(list(shuffled_actors[:n_test]))
-        val_actors = sorted(list(shuffled_actors[n_test:n_test + n_val]))
-        train_actors = sorted(list(shuffled_actors[n_test + n_val:]))
+        test_actors = sorted([str(a) for a in shuffled_actors[:n_test]])
+        val_actors = sorted([str(a) for a in shuffled_actors[n_test:n_test + n_val]])
+        train_actors = sorted([str(a) for a in shuffled_actors[n_test + n_val:]])
 
         # Strict speaker leakage verification
         leakage_train_test = set(train_actors) & set(test_actors)
@@ -265,12 +265,12 @@ class DatasetService:
         for a in test_actors:
             actor_to_split[a] = "test"
 
-        df["split"] = df["actor_id"].map(lambda a: actor_to_split.get(a, "train"))
+        df["split"] = df["actor_id"].astype(str).map(lambda a: actor_to_split.get(a, "train"))
         df.to_csv(self.metadata_path, index=False)
         self._df = df
 
         split_info = {
-            "random_seed": random_seed,
+            "random_seed": int(random_seed),
             "train_actors": train_actors,
             "val_actors": val_actors,
             "test_actors": test_actors,
@@ -280,6 +280,7 @@ class DatasetService:
             "train_samples": int((df["split"] == "train").sum()),
             "val_samples": int((df["split"] == "val").sum()),
             "test_samples": int((df["split"] == "test").sum()),
+            "speaker_leakage": 0,
             "zero_speaker_leakage_verified": True
         }
 
