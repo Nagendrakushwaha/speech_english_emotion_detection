@@ -180,7 +180,7 @@ class EvaluationService:
 
             if true_emo != pred_emo:
                 # Confused pair
-                pair_key = f"{true_emo} → {pred_emo}"
+                pair_key = f"{true_emo} -> {pred_emo}"
                 confused_pairs_count[pair_key] = confused_pairs_count.get(pair_key, 0) + 1
                 
                 actor = row["actor_id"]
