@@ -4,7 +4,7 @@ import torch
 from pathlib import Path
 
 from app.preprocessing.audio_pipeline import load_audio, generate_mel_spectrogram, extract_waveform_samples
-from app.preprocessing.feature_extractor import extract_single_audio_features
+from app.preprocessing.feature_extractor import extract_acoustic_features
 
 def test_audio_pipeline_synthetic_signal():
     """Verify loading, resampling to 16kHz mono, and spectrogram generation on synthetic audio."""
@@ -30,7 +30,7 @@ def test_feature_extraction():
     """Verify acoustic feature extractor extracts RMS, ZCR, Spectral Centroid, and MFCCs."""
     sr = 16000
     y = (0.5 * np.sin(2 * np.pi * 300 * np.linspace(0, 2.0, 32000))).astype(np.float32)
-    feats = extract_single_audio_features(y, sr)
+    feats = extract_acoustic_features(y, sr)
     
     assert "rms_mean" in feats
     assert "zcr_mean" in feats
