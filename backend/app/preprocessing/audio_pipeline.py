@@ -52,12 +52,44 @@ def load_audio(file_path: str | Path, target_sr: int = TARGET_SAMPLE_RATE) -> Tu
             
         return y, sr
     except Exception as e:
-        logger.warning(f"Soundfile failed on {file_path}, falling back to librosa: {e}")
-        y, sr = librosa.load(str(file_path), sr=target_sr, mono=True)
-        max_val = np.max(np.abs(y))
-        if max_val > 1e-6:
-            y = y / max_val
-        return y, sr
+        logger.warning(f"Soundfile failed on {file_path}, trying scipy / librosa fallbacks: {e}")
+        # Fallback 1: scipy.io.wavfile (handles varied WAV encodings robustly)
+        try:
+            import scipy.io.wavfile as wav
+            raw_sr, raw_y = wav.read(str(file_path))
+            if raw_y.dtype == np.int16:
+                y = raw_y.astype(np.float32) / 32768.0
+            elif raw_y.dtype == np.int32:
+                y = raw_y.astype(np.float32) / 2147483648.0
+            elif raw_y.dtype == np.uint8:
+                y = (raw_y.astype(np.float32) - 128.0) / 128.0
+            else:
+                y = raw_y.astype(np.float32)
+            if y.ndim > 1:
+                y = np.mean(y, axis=1)
+            if raw_sr != target_sr:
+                y = librosa.resample(y, orig_sr=raw_sr, target_sr=target_sr)
+                sr = target_sr
+            else:
+                sr = raw_sr
+            max_val = np.max(np.abs(y))
+            if max_val > 1e-6:
+                y = y / max_val
+            return y, sr
+        except Exception:
+            pass
+
+        # Fallback 2: librosa.load
+        try:
+            y, sr = librosa.load(str(file_path), sr=target_sr, mono=True)
+            max_val = np.max(np.abs(y))
+            if max_val > 1e-6:
+                y = y / max_val
+            return y, sr
+        except Exception as e2:
+            raise ValueError(
+                f"Audio format could not be decoded. Please upload standard 16-bit PCM WAV, MP3, FLAC, or OGG audio. Details: {e2}"
+            )
 
 def generate_mel_spectrogram(
     y: np.ndarray,

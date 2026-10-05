@@ -6,6 +6,7 @@ import {
 import PlotlyChart from '../components/PlotlyChart';
 import EmotionBadge from '../components/EmotionBadge';
 import { api } from '../services/api';
+import { convertBlobToWavFile } from '../services/audioEncoder';
 
 const EMOTION_COLORS = {
   Angry: '#ef4444',
@@ -110,12 +111,20 @@ export default function InferenceStudio({ onNavigate }) {
         }
       };
 
-      recorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
-        const file = new File([audioBlob], `recorded_${Date.now()}.wav`, { type: 'audio/wav' });
-        processSelectedFile(file);
-        stream.getTracks().forEach(track => track.stop());
-        if (audioCtx.state !== 'closed') audioCtx.close();
+      recorder.onstop = async () => {
+        try {
+          const rawBlob = new Blob(audioChunksRef.current, { type: recorder.mimeType || 'audio/webm' });
+          const wavFile = await convertBlobToWavFile(rawBlob, `recorded_${Date.now()}.wav`);
+          processSelectedFile(wavFile);
+        } catch (convErr) {
+          console.error('WAV conversion fallback:', convErr);
+          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+          const file = new File([audioBlob], `recorded_${Date.now()}.wav`, { type: 'audio/wav' });
+          processSelectedFile(file);
+        } finally {
+          stream.getTracks().forEach(track => track.stop());
+          if (audioCtx.state !== 'closed') audioCtx.close();
+        }
       };
 
       recorder.start(100);
@@ -213,8 +222,17 @@ export default function InferenceStudio({ onNavigate }) {
   };
 
   const executeAnalyze = async (file) => {
+    let uploadFile = file;
+    // Normalize any non-WAV or browser-recorded audio to genuine 16kHz PCM WAV
+    if (file && (!file.name.toLowerCase().endsWith('.wav') || file.type.includes('webm') || file.type.includes('ogg'))) {
+      try {
+        uploadFile = await convertBlobToWavFile(file, file.name);
+      } catch (convErr) {
+        console.warn('Could not pre-convert audio to WAV, sending original:', convErr);
+      }
+    }
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', uploadFile);
     const data = await api.analyzeAudio(formData);
     setResult(data);
   };

@@ -135,9 +135,14 @@ async def analyze_audio(file: UploadFile = File(...)):
             }
         }
 
+    except HTTPException:
+        raise
+    except ValueError as ve:
+        logger.warning(f"Audio decoding error for {file.filename}: {ve}")
+        raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         logger.error(f"Inference analysis failed: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Inference error: {str(e)}")
     finally:
         # 7. Guaranteed temp file cleanup
         if temp_file.exists():

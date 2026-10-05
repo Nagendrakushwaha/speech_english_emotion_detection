@@ -47,6 +47,6 @@ class Settings:
     EVALUATION_PATH: Path = REPORTS_DIR / "evaluation_reports" / "latest_evaluation.json"
 
     MAX_FILE_SIZE_MB: int = 25
-    ALLOWED_EXTENSIONS: list[str] = [".wav", ".mp3", ".flac", ".ogg"]
+    ALLOWED_EXTENSIONS: list[str] = [".wav", ".mp3", ".flac", ".ogg", ".webm", ".m4a", ".opus"]
 
 settings = Settings()
