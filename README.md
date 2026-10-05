@@ -1,7 +1,7 @@
-# 🎙️ Cognivision Voice Intelligence
+��# 🎙️ Cognivision Voice Intelligence
 
 > **Multilingual Speech Intelligence & Emotion Analytics Platform**  
-> *Combining Pretrained Foundation Architecture (SenseVoiceSmall) with a Custom CPU-Optimized PyTorch 2D-CNN on English Emotional Speech (CREMA-D).*
+> *Combining Pretrained Foundation Architecture (SenseVoiceSmallwith a Custom CPU-Optimized PyTorch 2D-CNN on English Emotional Speech (CREMA-D).*
 
 [![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/)
 [![PyTorch CPU](https://img.shields.io/badge/PyTorch-2.12+cpu-orange.svg)](https://pytorch.org/)
@@ -295,7 +295,7 @@ python scripts/benchmark_cpu.py
 | `POST` | `/api/dataset/scan` | Inspects audio files and regenerates `metadata.csv` |
 | `POST` | `/api/dataset/create-splits` | Generates speaker-independent train/val/test splits |
 | `GET` | `/api/features/pca-3d` | 3D PCA coordinates across extracted acoustic features |
-| `GET` | `/api/features/acoustic-3d` | 3D feature space (RMS x Spectral Centroid x MFCC) |
+| `GET` | `/api/features/acoustic-3d` | 3D feature space (RMS x Spectral Centroid x MFCC|
 | `POST` | `/api/training/start` | Initiates PyTorch CNN training with early stopping |
 | `POST` | `/api/training/stop` | Safely requests training cancellation |
 | `GET` | `/api/training/status` | Live epoch-by-epoch training metrics telemetry |

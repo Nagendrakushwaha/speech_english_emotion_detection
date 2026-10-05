@@ -25,6 +25,7 @@ if str(backend_dir) not in sys.path:
 if str(root_dir) not in sys.path:
     sys.path.insert(0, str(root_dir))
 
+# pyrefly: ignore [missing-import]
 from app.api.experiment_routes import run_complete_experiment_pipeline, PipelineRequest
 from app.utils.logger import logger
 
