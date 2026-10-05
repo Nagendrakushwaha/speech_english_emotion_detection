@@ -59,7 +59,7 @@ class TrainingService:
             "val_accuracy": 0.0,
             "learning_rate": 0.0,
             "best_epoch": 0,
-            "best_val_loss": float("inf"),
+            "best_val_loss": 0.0,
             "elapsed_seconds": 0.0,
             "remaining_seconds": 0.0,
             "message": "Model not trained yet"
@@ -136,7 +136,7 @@ class TrainingService:
             "val_accuracy": 0.0,
             "learning_rate": learning_rate,
             "best_epoch": 0,
-            "best_val_loss": float("inf"),
+            "best_val_loss": 0.0,
             "elapsed_seconds": 0.0,
             "remaining_seconds": 0.0,
             "message": "Initializing CPU training pipeline..."
@@ -347,7 +347,7 @@ class TrainingService:
                 "model_name": "Cognivision 2D-CNN Emotion Recognizer",
                 "trained_epochs": len(self.history["epochs"]),
                 "best_epoch": best_epoch,
-                "best_val_loss": round(float(best_val_loss), 4),
+                "best_val_loss": round(float(best_val_loss), 4) if best_val_loss != float("inf") else 0.0,
                 "best_val_accuracy": round(float(best_val_acc * 100), 2),
                 "batch_size": batch_size,
                 "initial_learning_rate": learning_rate,

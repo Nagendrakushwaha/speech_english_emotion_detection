@@ -7,6 +7,7 @@
     "dev": "npm --prefix frontend run dev",
     "backend": "python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload",
     "frontend": "npm --prefix frontend run dev",
+    "dev:all": "npm run start:all",
     "start:all": "npx -y concurrently -n \"BACKEND,FRONTEND\" -c \"green,cyan\" \"python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload\" \"npm --prefix frontend run dev\"",
     "build": "npm --prefix frontend run build",
     "preview": "npm --prefix frontend run preview",
